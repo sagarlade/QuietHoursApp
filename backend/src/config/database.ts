@@ -1,5 +1,4 @@
 import baseSql from 'mssql';
-import msnodesqlv8 from 'mssql/msnodesqlv8';
 import type { config as SqlConfig, ConnectionPool } from 'mssql';
 import dotenv from 'dotenv';
 
@@ -15,7 +14,18 @@ const parsedPort =
 const port = hasInstance ? undefined : parsedPort;
 
 const useWindowsAuth = process.env.DB_USE_WINDOWS_AUTH === 'true';
-const sql = useWindowsAuth ? msnodesqlv8 : baseSql;
+let sql = baseSql;
+
+if (useWindowsAuth) {
+  try {
+    // Optional dependency for Windows auth; not available on most Linux hosts.
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    sql = require('mssql/msnodesqlv8');
+  } catch (error) {
+    console.warn('mssql/msnodesqlv8 not available; falling back to SQL auth.');
+    sql = baseSql;
+  }
+}
 const odbcDriver =
   process.env.DB_ODBC_DRIVER && process.env.DB_ODBC_DRIVER.trim().length > 0
     ? process.env.DB_ODBC_DRIVER
