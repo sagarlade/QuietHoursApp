@@ -13,7 +13,8 @@ const parsedPort =
     : undefined;
 const port = hasInstance ? undefined : parsedPort;
 
-const useWindowsAuth = process.env.DB_USE_WINDOWS_AUTH === 'true';
+const useWindowsAuthRaw = process.env.DB_USE_WINDOWS_AUTH === 'true';
+const useWindowsAuth = useWindowsAuthRaw && process.platform === 'win32';
 let sql = baseSql;
 
 if (useWindowsAuth) {
@@ -25,6 +26,8 @@ if (useWindowsAuth) {
     console.warn('mssql/msnodesqlv8 not available; falling back to SQL auth.');
     sql = baseSql;
   }
+} else if (useWindowsAuthRaw && process.platform !== 'win32') {
+  console.warn('DB_USE_WINDOWS_AUTH=true ignored on non-Windows platform.');
 }
 const odbcDriver =
   process.env.DB_ODBC_DRIVER && process.env.DB_ODBC_DRIVER.trim().length > 0
