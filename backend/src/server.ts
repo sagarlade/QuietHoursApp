@@ -61,7 +61,7 @@ const startServer = async () => {
     }
 
     // Start server regardless of DB connection success
-    app.listen(PORT, () => {
+    app.listen(Number(PORT), '0.0.0.0',() => {
       console.log(`\n✓ Server is running on http://localhost:${PORT}`);
       console.log(`✓ API Documentation: http://localhost:${PORT}/api`);
     });
