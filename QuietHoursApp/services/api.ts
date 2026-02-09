@@ -3,8 +3,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Platform } from 'react-native';
 
 const DEFAULT_BASE_URL = Platform.select({
-  web: 'http://localhost:5000/api',
-  default: 'http://10.152.29.252:5000/api',
+  web: 'https://quiethoursapp.onrender.com/api',
+  default: 'https://quiethoursapp.onrender.com/api',
 });
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || DEFAULT_BASE_URL;
